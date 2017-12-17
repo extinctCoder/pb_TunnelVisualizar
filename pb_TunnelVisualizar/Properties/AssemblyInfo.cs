@@ -8,11 +8,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("pb_TunnelVisualizar")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("This is an product of extinctCoder")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("extinctCoder")]
 [assembly: AssemblyProduct("pb_TunnelVisualizar")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCopyright("Copyright extinctCoder ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

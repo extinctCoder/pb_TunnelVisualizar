@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="pb_TunnelVisualizarDatabaseModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="data_waterFlow">
+          <Key>
+            <PropertyRef Name="iddata_waterFlow" />
+            <PropertyRef Name="sensor_iddata" />
+          </Key>
+          <Property Name="iddata_waterFlow" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="data" Type="varchar" MaxLength="45" />
+          <Property Name="sensor_iddata" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="data_waterLavel">
+          <Key>
+            <PropertyRef Name="iddata_waterLavel" />
+            <PropertyRef Name="sensor_iddata" />
+          </Key>
+          <Property Name="iddata_waterLavel" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="data" Type="varchar" MaxLength="45" />
+          <Property Name="sensor_iddata" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="rule">
+          <Key>
+            <PropertyRef Name="idrule" />
+            <PropertyRef Name="sensor_iddata" />
+          </Key>
+          <Property Name="idrule" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="rule" Type="varchar" MaxLength="45" />
+          <Property Name="sensor_iddata" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sensor">
+          <Key>
+            <PropertyRef Name="iddata" />
+          </Key>
+          <Property Name="iddata" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="position_x" Type="varchar" MaxLength="45" />
+          <Property Name="position_y" Type="varchar" MaxLength="45" />
+          <Property Name="description" Type="varchar" MaxLength="45" />
+        </EntityType>
+        <Association Name="fk_data_waterFlow_sensor1">
+          <End Role="sensor" Type="Self.sensor" Multiplicity="1" />
+          <End Role="data_waterFlow" Type="Self.data_waterFlow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sensor">
+              <PropertyRef Name="iddata" />
+            </Principal>
+            <Dependent Role="data_waterFlow">
+              <PropertyRef Name="sensor_iddata" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_data_waterLavel_sensor1">
+          <End Role="sensor" Type="Self.sensor" Multiplicity="1" />
+          <End Role="data_waterLavel" Type="Self.data_waterLavel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sensor">
+              <PropertyRef Name="iddata" />
+            </Principal>
+            <Dependent Role="data_waterLavel">
+              <PropertyRef Name="sensor_iddata" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_rule_sensor">
+          <End Role="sensor" Type="Self.sensor" Multiplicity="1" />
+          <End Role="rule" Type="Self.rule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sensor">
+              <PropertyRef Name="iddata" />
+            </Principal>
+            <Dependent Role="rule">
+              <PropertyRef Name="sensor_iddata" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="pb_TunnelVisualizarDatabaseModelStoreContainer">
+          <EntitySet Name="data_waterFlow" EntityType="Self.data_waterFlow" Schema="pb_TunnelVisualizarDatabase" store:Type="Tables" />
+          <EntitySet Name="data_waterLavel" EntityType="Self.data_waterLavel" Schema="pb_TunnelVisualizarDatabase" store:Type="Tables" />
+          <EntitySet Name="rule" EntityType="Self.rule" Schema="pb_TunnelVisualizarDatabase" store:Type="Tables" />
+          <EntitySet Name="sensor" EntityType="Self.sensor" Schema="pb_TunnelVisualizarDatabase" store:Type="Tables" />
+          <AssociationSet Name="fk_data_waterFlow_sensor1" Association="Self.fk_data_waterFlow_sensor1">
+            <End Role="sensor" EntitySet="sensor" />
+            <End Role="data_waterFlow" EntitySet="data_waterFlow" />
+          </AssociationSet>
+          <AssociationSet Name="fk_data_waterLavel_sensor1" Association="Self.fk_data_waterLavel_sensor1">
+            <End Role="sensor" EntitySet="sensor" />
+            <End Role="data_waterLavel" EntitySet="data_waterLavel" />
+          </AssociationSet>
+          <AssociationSet Name="fk_rule_sensor" Association="Self.fk_rule_sensor">
+            <End Role="sensor" EntitySet="sensor" />
+            <End Role="rule" EntitySet="rule" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="pb_TunnelVisualizarDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="data_waterFlow">
+          <Key>
+            <PropertyRef Name="iddata_waterFlow" />
+            <PropertyRef Name="sensor_iddata" />
+          </Key>
+          <Property Name="iddata_waterFlow" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="data" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="sensor_iddata" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="sensor" Relationship="Self.fk_data_waterFlow_sensor1" FromRole="data_waterFlow" ToRole="sensor" />
+        </EntityType>
+        <EntityType Name="data_waterLavel">
+          <Key>
+            <PropertyRef Name="iddata_waterLavel" />
+            <PropertyRef Name="sensor_iddata" />
+          </Key>
+          <Property Name="iddata_waterLavel" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="data" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="sensor_iddata" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="sensor" Relationship="Self.fk_data_waterLavel_sensor1" FromRole="data_waterLavel" ToRole="sensor" />
+        </EntityType>
+        <EntityType Name="rule">
+          <Key>
+            <PropertyRef Name="idrule" />
+            <PropertyRef Name="sensor_iddata" />
+          </Key>
+          <Property Name="idrule" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="rule1" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="sensor_iddata" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="sensor" Relationship="Self.fk_rule_sensor" FromRole="rule" ToRole="sensor" />
+        </EntityType>
+        <EntityType Name="sensor">
+          <Key>
+            <PropertyRef Name="iddata" />
+          </Key>
+          <Property Name="iddata" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="position_x" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="position_y" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="data_waterFlow" Relationship="Self.fk_data_waterFlow_sensor1" FromRole="sensor" ToRole="data_waterFlow" />
+          <NavigationProperty Name="data_waterLavel" Relationship="Self.fk_data_waterLavel_sensor1" FromRole="sensor" ToRole="data_waterLavel" />
+          <NavigationProperty Name="rules" Relationship="Self.fk_rule_sensor" FromRole="sensor" ToRole="rule" />
+        </EntityType>
+        <Association Name="fk_data_waterFlow_sensor1">
+          <End Role="sensor" Type="Self.sensor" Multiplicity="1" />
+          <End Role="data_waterFlow" Type="Self.data_waterFlow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sensor">
+              <PropertyRef Name="iddata" />
+            </Principal>
+            <Dependent Role="data_waterFlow">
+              <PropertyRef Name="sensor_iddata" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_data_waterLavel_sensor1">
+          <End Role="sensor" Type="Self.sensor" Multiplicity="1" />
+          <End Role="data_waterLavel" Type="Self.data_waterLavel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sensor">
+              <PropertyRef Name="iddata" />
+            </Principal>
+            <Dependent Role="data_waterLavel">
+              <PropertyRef Name="sensor_iddata" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_rule_sensor">
+          <End Role="sensor" Type="Self.sensor" Multiplicity="1" />
+          <End Role="rule" Type="Self.rule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sensor">
+              <PropertyRef Name="iddata" />
+            </Principal>
+            <Dependent Role="rule">
+              <PropertyRef Name="sensor_iddata" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="pb_TunnelVisualizarDatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="data_waterFlow" EntityType="Self.data_waterFlow" />
+          <EntitySet Name="data_waterLavel" EntityType="Self.data_waterLavel" />
+          <EntitySet Name="rules" EntityType="Self.rule" />
+          <EntitySet Name="sensors" EntityType="Self.sensor" />
+          <AssociationSet Name="fk_data_waterFlow_sensor1" Association="Self.fk_data_waterFlow_sensor1">
+            <End Role="sensor" EntitySet="sensors" />
+            <End Role="data_waterFlow" EntitySet="data_waterFlow" />
+          </AssociationSet>
+          <AssociationSet Name="fk_data_waterLavel_sensor1" Association="Self.fk_data_waterLavel_sensor1">
+            <End Role="sensor" EntitySet="sensors" />
+            <End Role="data_waterLavel" EntitySet="data_waterLavel" />
+          </AssociationSet>
+          <AssociationSet Name="fk_rule_sensor" Association="Self.fk_rule_sensor">
+            <End Role="sensor" EntitySet="sensors" />
+            <End Role="rule" EntitySet="rules" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="pb_TunnelVisualizarDatabaseModelStoreContainer" CdmEntityContainer="pb_TunnelVisualizarDatabaseEntities">
+          <EntitySetMapping Name="data_waterFlow">
+            <EntityTypeMapping TypeName="pb_TunnelVisualizarDatabaseModel.data_waterFlow">
+              <MappingFragment StoreEntitySet="data_waterFlow">
+                <ScalarProperty Name="iddata_waterFlow" ColumnName="iddata_waterFlow" />
+                <ScalarProperty Name="data" ColumnName="data" />
+                <ScalarProperty Name="sensor_iddata" ColumnName="sensor_iddata" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="data_waterLavel">
+            <EntityTypeMapping TypeName="pb_TunnelVisualizarDatabaseModel.data_waterLavel">
+              <MappingFragment StoreEntitySet="data_waterLavel">
+                <ScalarProperty Name="iddata_waterLavel" ColumnName="iddata_waterLavel" />
+                <ScalarProperty Name="data" ColumnName="data" />
+                <ScalarProperty Name="sensor_iddata" ColumnName="sensor_iddata" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="rules">
+            <EntityTypeMapping TypeName="pb_TunnelVisualizarDatabaseModel.rule">
+              <MappingFragment StoreEntitySet="rule">
+                <ScalarProperty Name="idrule" ColumnName="idrule" />
+                <ScalarProperty Name="rule1" ColumnName="rule" />
+                <ScalarProperty Name="sensor_iddata" ColumnName="sensor_iddata" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sensors">
+            <EntityTypeMapping TypeName="pb_TunnelVisualizarDatabaseModel.sensor">
+              <MappingFragment StoreEntitySet="sensor">
+                <ScalarProperty Name="iddata" ColumnName="iddata" />
+                <ScalarProperty Name="position_x" ColumnName="position_x" />
+                <ScalarProperty Name="position_y" ColumnName="position_y" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

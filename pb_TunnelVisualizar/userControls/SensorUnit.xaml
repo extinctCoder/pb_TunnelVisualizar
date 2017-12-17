@@ -1,0 +1,105 @@
+﻿<UserControl x:Class="pb_TunnelVisualizar.userControls.SensorUnit"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:pb_TunnelVisualizar.userControls"
+             mc:Ignorable="d" Width="360"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="5"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="5"></RowDefinition>
+        </Grid.RowDefinitions>
+        <materialDesign:Card Grid.Column="1" Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="15"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="5"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="5"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid Grid.Column="1" Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="5"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="5" Grid.Row="1" Content="Sensor Description : " HorizontalContentAlignment="Right" VerticalContentAlignment="Center"></Label>
+                    <Label Grid.Column="7" Grid.Row="1" x:Name="sensor_description_label" Content="unknown"></Label>
+                    <Label Grid.Column="1" Grid.Row="1" Content="Sensor ID : " HorizontalContentAlignment="Right" VerticalContentAlignment="Center"></Label>
+                    <Label Grid.Column="3" Grid.Row="1" x:Name="sensor_id_label" Content="-0.00"></Label>
+                </Grid>
+                <Grid Grid.Column="1" Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="5"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="1" Grid.Row="1" Content="Position X : " HorizontalContentAlignment="Right" VerticalContentAlignment="Center"></Label>
+                    <Label Grid.Column="3" Grid.Row="1" x:Name="position_x_label" Content="-0.00"></Label>
+                    <Label Grid.Column="5" Grid.Row="1" Content="Position Y : " HorizontalContentAlignment="Right" VerticalContentAlignment="Center"></Label>
+                    <Label Grid.Column="7" Grid.Row="1" x:Name="position_y_label" Content="-0.00"></Label>
+                </Grid>
+                <Grid Grid.Column="1" Grid.Row="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="5"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="1" Grid.Row="1" Content="Flow Rate : " HorizontalContentAlignment="Right" VerticalContentAlignment="Center"></Label>
+                    <Label Grid.Column="3" Grid.Row="1" x:Name="flow_rate_label" Content="-0.00"></Label>
+                    <Label Grid.Column="5" Grid.Row="1" Content="Water Height : " HorizontalContentAlignment="Right" VerticalContentAlignment="Center"></Label>
+                    <Label Grid.Column="7" Grid.Row="1" x:Name="water_height_label" Content="-0.00"></Label>
+                </Grid>
+            </Grid>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>
