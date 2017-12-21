@@ -82,24 +82,18 @@
             <TabControl Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <TabItem Header="Sensor Overview">
                     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                        <WrapPanel x:Name="container" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <userControls:SensorUnit></userControls:SensorUnit>
-                            <userControls:SensorUnit></userControls:SensorUnit>
-                            <userControls:SensorUnit></userControls:SensorUnit>
+                        <WrapPanel x:Name="sensor_unit_grid" HorizontalAlignment="Center" VerticalAlignment="Center">
                         </WrapPanel>
                     </ScrollViewer>
                 </TabItem>
                 <TabItem Header="Map View">
-                    <Grid></Grid>
+                    <Grid x:Name="map_grid"></Grid>
                 </TabItem>
-                <TabItem Header="Settings"></TabItem>
+                <TabItem Header="Settings">
+
+                </TabItem>
             </TabControl>
         </Grid>
-
-        <StatusBar Grid.Column="1" Grid.Row="3">
-            <StatusBarItem HorizontalAlignment="Right" VerticalAlignment="Center">
-                <TextBlock x:Name="StatusBar" Text=" "></TextBlock>
-            </StatusBarItem>
-        </StatusBar>
+        <Grid Grid.Column="1" Grid.Row="3" x:Name="console_grid"></Grid>
     </Grid>
 </Controls:MetroWindow>

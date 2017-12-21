@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using MaterialDesignThemes.Wpf;
+using pb_TunnelVisualizar.userControls;
 
 namespace pb_TunnelVisualizar
 {
@@ -25,11 +27,72 @@ namespace pb_TunnelVisualizar
         public MainWindow()
         {
             InitializeComponent();
+            this.ModuleInitializer();
+            this.loadModule();
         }
 
+        private void ModuleInitializer()
+        {
+            Thread systemConsoleThread = new Thread(threadedSystemConsoleInitializerFunction);
+            systemConsoleThread.Name = "systemConsoleThread";
+            systemConsoleThread.IsBackground = true;
+            systemConsoleThread.Start();
+
+            Thread mapControlThread = new Thread(threadedMapControlInitializerFunction);
+            mapControlThread.Name = "mapControlThread";
+            mapControlThread.IsBackground = true;
+            mapControlThread.Start();
+        }
+
+        void loadModule()
+        {
+            try
+            {
+                using (var db = new db.pb_TunnelVisualizarDatabaseEntities())
+                {
+                    if (db.sensors.Count() >= 0)
+                    {
+                        foreach (var dbSensor in db.sensors)
+                        {
+                            this.sensor_unit_grid.Children.Add(new SensorUnit(dbSensor));
+                            // SystemConsole.setConsoleTxt("new sensor unit added ... description is : " +
+                            //   dbSensor.description);
+                        }
+                    }
+                    else
+                    {
+                        this.sensor_unit_grid.Children.Add(new Label()
+                        {
+                            Content = "no sensor added in database"
+                        });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                SystemConsole.setConsoleTxt(e.Message);
+            }
+            
+            
+        }
+
+        private void threadedSystemConsoleInitializerFunction()
+        {
+            this.console_grid.Dispatcher.Invoke((Action) (() =>
+            {
+                this.console_grid.Children.Add(SystemConsole.console);
+            }));
+        }
+        private void threadedMapControlInitializerFunction()
+        {
+            this.map_grid.Dispatcher.Invoke((Action)(() =>
+            {
+                this.map_grid.Children.Add(MapControl.mapControl);
+            }));
+        }
         private void Info_Button_OnClick(object sender, RoutedEventArgs e)
         {
-            this.StatusBar.Text = "designed and developed by extinctCoder";
+            SystemConsole.setConsoleTxtThreadSafe("designed and developed by extinctCoder");
             this.DialogHost_TextBlock.Visibility = Visibility.Hidden;
             this.Devloper_Grid.Visibility = Visibility.Visible;
             this.DialogHost.IsOpen = true;
@@ -43,7 +106,7 @@ namespace pb_TunnelVisualizar
         {
             this.DialogHost_TextBlock.Visibility = Visibility.Visible;
             this.Devloper_Grid.Visibility = Visibility.Hidden;
-            this.StatusBar.Text = " ";
+            SystemConsole.setConsoleTxtThreadSafe(" ");
         }
     }
 }
