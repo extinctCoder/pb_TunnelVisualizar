@@ -15,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using pb_TunnelVisualizar.db;
+using MahApps.Metro;
+using MaterialDesignThemes;
 
 namespace pb_TunnelVisualizar.userControls
 {
@@ -26,6 +28,9 @@ namespace pb_TunnelVisualizar.userControls
         private sensor _sensor;
         private data_waterFlow _dataWaterFlow;
         private data_waterLavel _dataWaterLavel;
+        private Thread dataUpatderThread;
+        private bool flag_1 = true;
+        private bool flag_2 = true;
         public SensorUnit()
         {
             InitializeComponent();
@@ -33,48 +38,122 @@ namespace pb_TunnelVisualizar.userControls
 
         public SensorUnit(db.sensor _sensor)
         {
-            this.InitializeComponent();
-            this._sensor = _sensor;
-            this.sensor_id_label.Content = this._sensor.iddata.ToString();
-            this.sensor_description_label.Content = this._sensor.description.ToString();
-            this.position_x_label.Content = this._sensor.position_x.ToString();
-            this.position_y_label.Content = this._sensor.position_y.ToString();
+            try
+            {
+                this.InitializeComponent();
+                this._sensor = _sensor;
+                this.sensor_id_label.Content = this._sensor.iddata.ToString();
+                this.sensor_description_label.Content =
+                    this._sensor.description == null ? "null" : this._sensor.description.ToString();
+                this.position_x_label.Content =
+                    this._sensor.position_x == null ? "null" : this._sensor.position_x.ToString();
+                this.position_y_label.Content = this._sensor.position_y == null ? "null" : this._sensor.position_y;
 
-            if (this._sensor.data_waterLavel.Count() > 0)
-            {
-                this._dataWaterFlow = this._sensor.data_waterFlow.Last();
-                this.flow_rate_label.Content =
-                    this._dataWaterFlow.data == null ? "null" : this._dataWaterFlow.data.ToString();
+                if (this._sensor.data_waterFlow.Count() > 0)
+                {
+                    this._dataWaterFlow = this._sensor.data_waterFlow.Last();
+                    this.flow_rate_label.Content =
+                        this._dataWaterFlow.data == null ? "null" : this._dataWaterFlow.data.ToString();
+                }
+                if (this._sensor.data_waterLavel.Count() > 0)
+                {
+                    this._dataWaterLavel = this._sensor.data_waterLavel.Last();
+                    this.water_height_label.Content =
+                        this._dataWaterLavel.data == null ? "null" : this._dataWaterLavel.data.ToString();
+                }
+                this.dataUpdater();
             }
-            if (this._sensor.data_waterFlow.Count() > 0)
+            catch (Exception e)
             {
-                this._dataWaterLavel = this._sensor.data_waterLavel.Last();
-                this.water_height_label.Content =
-                    this._dataWaterLavel.data == null ? "null" : this._dataWaterLavel.data.ToString();
+                SystemConsole.setConsoleTxt(e.Message);
             }
         }
 
         private void dataUpdater()
         {
-            Thread dataUpatderThread = new Thread(dataUpdaterFunction);
-            dataUpatderThread.Name = "dataUpatderThread";
-            dataUpatderThread.IsBackground = true;
-            dataUpatderThread.Start();
+            this.dataUpatderThread = new Thread(dataUpdaterFunction);
+            this.dataUpatderThread.Name = "dataUpatderThread";
+            this.dataUpatderThread.IsBackground = true;
+            this.dataUpatderThread.Start();
         }
         private void dataUpdaterFunction()
         {
-            this.Dispatcher.Invoke((Action)(() =>
+            try
             {
-                using (var db = new pb_TunnelVisualizarDatabaseEntities())
+                while (true)
                 {
-                    this._dataWaterFlow = (db.sensors.Find(_sensor.iddata)).data_waterFlow.Last();
-                    this._dataWaterLavel = (db.sensors.Find(_sensor.iddata)).data_waterLavel.Last();
-                };
-                this.flow_rate_label.Content = this._dataWaterFlow.data.ToString();
-                this.water_height_label.Content = this._dataWaterLavel.data.ToString();
-                Debug.WriteLine(this._dataWaterFlow.data.ToString());
-                Debug.WriteLine(this._dataWaterLavel.data.ToString());
-            }));
+                    this.container.Dispatcher.Invoke((Action)(() =>
+                    {
+                        using (var db = new pb_TunnelVisualizarDatabaseEntities())
+                        {
+                            this._sensor = db.sensors.Find(this._sensor.iddata);
+                            if (this._sensor.data_waterFlow.Count() > 0)
+                            {
+                                this._dataWaterFlow = this._sensor.data_waterFlow.Last();
+                                this.flow_rate_label.Content = this._dataWaterFlow.data == null
+                                    ? "null"
+                                    : this._dataWaterFlow.data.ToString();
+                                try
+                                {
+                                    if (Convert.ToDouble(this._dataWaterFlow.data) <=Convert.ToDouble(this.flow_rate_label_meter.Text))
+                                    {
+                                            this.Card.Background = Brushes.Red;
+                                            this.flag_1 = false;
+                                        
+                                    }
+                                    else
+                                    {
+                                        flag_1 = true;
+                                        if (flag_1&&flag_2)
+                                        {
+                                            this.Card.Background = Brushes.WhiteSmoke;
+                                        }
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                }
+                                
+                            }
+                            if (this._sensor.data_waterLavel.Count() > 0)
+                            {
+                                this._dataWaterLavel = this._sensor.data_waterLavel.Last();
+                                this.water_height_label.Content = this._dataWaterLavel.data == null
+                                    ? "null"
+                                    : this._dataWaterLavel.data.ToString();
+                                try
+                                {
+
+                                    if (Convert.ToDouble(this._dataWaterLavel.data) <=Convert.ToDouble(this.water_height_label_meter.Text))
+                                    {
+                                            this.Card.Background = Brushes.Red;
+                                            this.flag_2 = false;
+                                        
+                                    }
+                                    else
+                                    {
+                                        flag_2 = true;
+                                        if (flag_1 && flag_2)
+                                        {
+                                            this.Card.Background = Brushes.WhiteSmoke;
+                                        }
+
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                }
+                            }
+                        }
+                    }));
+                    Thread.Sleep(1000);
+                }
+            }
+            catch (Exception e)
+            {
+                SystemConsole.setConsoleTxtThreadSafe(e.Message);
+            }
+            
         }
         public SensorUnit(sensor _sensor, data_waterFlow _dataWaterFlow, data_waterLavel _dataWaterLavel)
         {
@@ -95,17 +174,19 @@ namespace pb_TunnelVisualizar.userControls
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            if (this._sensor.data_waterLavel.Count() > 0 && this._sensor.data_waterFlow.Count() > 0)
+            using (var db = new pb_TunnelVisualizarDatabaseEntities())
             {
-                using (var db = new pb_TunnelVisualizarDatabaseEntities())
+                this._sensor = db.sensors.Find(this._sensor.iddata);
+                if (this._sensor.data_waterFlow.Count() > 0)
                 {
-                    this._dataWaterFlow = (db.sensors.Find(_sensor.iddata)).data_waterFlow.Last();
-                    this._dataWaterLavel = (db.sensors.Find(_sensor.iddata)).data_waterLavel.Last();
-                };
-                this.flow_rate_label.Content = this._dataWaterFlow.data.ToString();
-                this.water_height_label.Content = this._dataWaterLavel.data.ToString();
-                Debug.WriteLine(this._dataWaterFlow.data.ToString());
-                Debug.WriteLine(this._dataWaterLavel.data.ToString());
+                    this._dataWaterFlow = this._sensor.data_waterFlow.Last();
+                    this.flow_rate_label.Content = this._dataWaterFlow.data.ToString();
+                }
+                if (this._sensor.data_waterLavel.Count() > 0)
+                {
+                    this._dataWaterLavel = this._sensor.data_waterLavel.Last();
+                    this.water_height_label.Content = this._dataWaterLavel.data.ToString();
+                }
             }
         }
     }

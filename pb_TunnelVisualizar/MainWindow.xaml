@@ -81,16 +81,17 @@
             </Grid.RowDefinitions>
             <TabControl Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <TabItem Header="Sensor Overview">
-                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                        <WrapPanel x:Name="sensor_unit_grid" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        </WrapPanel>
-                    </ScrollViewer>
+                    <GroupBox Header="Sensor Panel">
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                            <WrapPanel x:Name="sensor_unit_grid" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            </WrapPanel>
+                        </ScrollViewer>
+                    </GroupBox>
                 </TabItem>
                 <TabItem Header="Map View">
-                    <Grid x:Name="map_grid"></Grid>
-                </TabItem>
-                <TabItem Header="Settings">
-
+                    <GroupBox Header="Map Panel">
+                        <Grid x:Name="map_grid"></Grid>
+                    </GroupBox>
                 </TabItem>
             </TabControl>
         </Grid>

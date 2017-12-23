@@ -50,26 +50,34 @@ namespace pb_TunnelVisualizar
             {
                 using (var db = new db.pb_TunnelVisualizarDatabaseEntities())
                 {
-                    if (db.sensors.Count() >= 0)
+                    if (db.sensors.Count() > 0)
                     {
                         foreach (var dbSensor in db.sensors)
                         {
                             this.sensor_unit_grid.Children.Add(new SensorUnit(dbSensor));
-                            // SystemConsole.setConsoleTxt("new sensor unit added ... description is : " +
-                            //   dbSensor.description);
                         }
                     }
                     else
                     {
-                        this.sensor_unit_grid.Children.Add(new Label()
+                        this.sensor_unit_grid.Children.Add(new StackPanel()
                         {
-                            Content = "no sensor added in database"
+                            Children = { new Label()
+                            {
+                                Content = "no component added in database"
+                            }}
                         });
                     }
                 }
             }
             catch (Exception e)
             {
+                this.sensor_unit_grid.Children.Add(new StackPanel()
+                {
+                    Children = { new Label()
+                    {
+                        Content = e.Message
+                    }}
+                });
                 SystemConsole.setConsoleTxt(e.Message);
             }
             
@@ -87,7 +95,7 @@ namespace pb_TunnelVisualizar
         {
             this.map_grid.Dispatcher.Invoke((Action)(() =>
             {
-                this.map_grid.Children.Add(MapControl.mapControl);
+                this.map_grid.Children.Add(new MapControl());
             }));
         }
         private void Info_Button_OnClick(object sender, RoutedEventArgs e)

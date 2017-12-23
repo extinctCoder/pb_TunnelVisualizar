@@ -1,13 +1,15 @@
+
 #include <ESP8266WiFi.h>
 #include <Arduino.h> 
 const char* ssid     = "seraphGetway";
 const char* password = "webGetway";
 const char* host = "192.168.0.106";
 const int httpPort = 80;
-int iddata = 3;
+const byte depthPin = A0;
+const int flowPin = D2;
+int iddata = 1;
 int data_waterFlow = -1;
 int data_waterlavel = -1;
-const int sensor_pin = D2;
 byte sensorInterrupt = 0;
 float calibrationFactor = 4.5;
 volatile byte pulseCount;
@@ -36,12 +38,12 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 
-  pinMode(sensor_pin, INPUT);
+  pinMode(flowPin, INPUT);
   pulseCount = 0;
   flowRate = 0.0;
   oldTime = 0;
-  digitalWrite(sensor_pin, HIGH);
-  attachInterrupt(digitalPinToInterrupt(sensor_pin), pulseCounter, RISING);
+  digitalWrite(flowPin, HIGH);
+  attachInterrupt(digitalPinToInterrupt(flowPin), pulseCounter, RISING);
 }
 void loop() {
   delay(1000);
@@ -77,8 +79,8 @@ void loop() {
     }
   }
   while(client.available()){
-    //String line = client.readStringUntil('\r');
-    //Serial.print(line);
+    String line = client.readStringUntil('\r');
+    Serial.print(line);
   }
   Serial.println();
   Serial.println("closing connection");
@@ -89,15 +91,18 @@ void pulseCounter() {
 void updateSensorData(){
   if (WiFi.status() == WL_CONNECTED && (millis() - oldTime) > 1000)
     {
-        Serial.print("data updating : ");
+        data_waterlavel = analogRead(depthPin);
         detachInterrupt(sensorInterrupt);
         flowRate = ((1000.0 / (millis() - oldTime)) * pulseCount);
         oldTime = millis();
         flowMilliLitres = (flowRate / 60) * 1000;
         totalMilliLitres += flowMilliLitres;
-        data_waterFlow = flowRate;
-        Serial.println(flowRate);
+        data_waterFlow = flowMilliLitres;
         pulseCount = 0;
         attachInterrupt(sensorInterrupt, pulseCounter, FALLING);
+        Serial.print("data updating : ");
+        Serial.print(data_waterFlow);
+        Serial.print(", ");
+        Serial.println(data_waterlavel);
     }
 }

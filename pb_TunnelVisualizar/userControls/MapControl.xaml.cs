@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
+using pb_TunnelVisualizar.db;
 
 namespace pb_TunnelVisualizar.userControls
 {
@@ -25,26 +26,43 @@ namespace pb_TunnelVisualizar.userControls
     /// </summary>
     public partial class MapControl : UserControl
     {
-        public static MapControl _mapControl = null;
-        public static PointLatLng _startingPosition;
-        public static PointLatLng _endingPosition;
-        public static GMapMarker _currentMarker;
+        public GMapMarker _currentMarker;
 
-        public static MapControl mapControl
-        {
-            get
-            {
-                if (MapControl._currentMarker == null)
-                {
-                    MapControl._mapControl = new MapControl();
-                }
-                return MapControl._mapControl;
-            }
-        }
-
-        private MapControl()
+        public MapControl()
         {
             InitializeComponent();
+            loadMapBasics();
+            LoadSernsorPlaces();
+        }
+
+        private void LoadSernsorPlaces()
+        {
+            try
+            {
+                using (var db = new pb_TunnelVisualizarDatabaseEntities())
+                {
+                    foreach (var dbSensor in db.sensors)
+                    {
+                        map_viw.Markers.Add(new GMapMarker(new PointLatLng(Convert.ToDouble(dbSensor.position_x), Convert.ToDouble(dbSensor.position_y)))
+                        {
+                            Shape = getRectangle.rectangle(Brushes.Green)
+                        });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                SystemConsole.setConsoleTxtThreadSafe(e.Message);
+            }
+           
+            
+        }
+    }
+
+    public partial class MapControl
+    {
+        private void loadMapBasics()
+        {
             if (!PingNetwork("pingtest.com"))
             {
                 map_viw.Manager.Mode = AccessMode.CacheOnly;
@@ -54,8 +72,8 @@ namespace pb_TunnelVisualizar.userControls
             {
                 SystemConsole.setConsoleTxtThreadSafe("Internet connection available, going to normal mode");
             }
-            map_viw.MapProvider = GMapProviders.OpenStreetMap;
-            map_viw.Position = new PointLatLng(23.8103, 90.4125);
+            map_viw.MapProvider = GMapProviders.GoogleMap;
+            map_viw.Position = new PointLatLng(23.83381, 90.41679);
             map_viw.Zoom = 10;
 
             map_type_combo_bx.ItemsSource = GMapProviders.List;
@@ -69,32 +87,29 @@ namespace pb_TunnelVisualizar.userControls
 
             current_marker_cheack_bx.IsChecked = true;
             drag_map_cheack_bx.IsChecked = map_viw.CanDragMap;
-            grid_cheack_bx.IsChecked = true;
+            grid_cheack_bx.IsChecked = false;
 
-            MapControl._currentMarker = new GMapMarker(map_viw.Position);
+            this._currentMarker = new GMapMarker(map_viw.Position);
             {
-                MapControl._currentMarker.Shape = new Rectangle
+                this._currentMarker.Shape = new Rectangle
                 {
                     Width = 10,
                     Height = 10,
                     Stroke = Brushes.Red,
-                    StrokeThickness = 1.5
+                    StrokeThickness = 5
                 };
             }
         }
-
         private void zom_slidr_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            map_viw.Zoom = ((int) zom_slidr.Value);
+            map_viw.Zoom = ((int)zom_slidr.Value);
             SystemConsole.setConsoleTxtThreadSafe("Map Zoomed In : " + zom_slidr.Value.ToString() + "x");
         }
-
         private void reload_btn_Click(object sender, RoutedEventArgs e)
         {
             map_viw.ReloadMap();
             SystemConsole.setConsoleTxtThreadSafe("Map Re-Initialized");
         }
-
         private void save_btn_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -126,15 +141,11 @@ namespace pb_TunnelVisualizar.userControls
                 SystemConsole.setConsoleTxtThreadSafe(ex.Message);
             }
         }
-
-       
-
         private void export_btn_Click(object sender, RoutedEventArgs e)
         {
             SystemConsole.setConsoleTxtThreadSafe("Saving The Map Cache In Local Storage");
             map_viw.ShowExportDialog();
         }
-
         private void clear_all_cache_btn_Click(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("Are You Sure To Clear The Map Cache?\nNo Data Will Be Saved In Local Storage",
@@ -157,10 +168,10 @@ namespace pb_TunnelVisualizar.userControls
             RectLatLng rectLatLng = map_viw.SelectedArea;
             if (!rectLatLng.IsEmpty)
             {
-                for (int i = (int) map_viw.Zoom; i <= map_viw.MaxZoom; i++)
+                for (int i = (int)map_viw.Zoom; i <= map_viw.MaxZoom; i++)
                 {
-                    MessageBoxResult messageBoxResult = MessageBox.Show("Ready Prefetch The Map At Zoom = " + i + " ?",
-                        "Prefetch", MessageBoxButton.YesNoCancel);
+                    MessageBoxResult messageBoxResult = MessageBox.Show("Ready Pref etch The Map At Zoom = " + i + " ?",
+                        "Pref etch", MessageBoxButton.YesNoCancel);
 
                     if (messageBoxResult == MessageBoxResult.Yes)
                     {
@@ -192,18 +203,18 @@ namespace pb_TunnelVisualizar.userControls
 
         private void current_marker_cheack_bx_Checked(object sender, RoutedEventArgs e)
         {
-            if (MapControl._currentMarker != null)
+            if (this._currentMarker != null)
             {
-                map_viw.Markers.Add(MapControl._currentMarker);
+                map_viw.Markers.Add(this._currentMarker);
                 SystemConsole.setConsoleTxtThreadSafe("Current Marker Initialized");
             }
         }
 
         private void current_marker_cheack_bx_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (MapControl._currentMarker != null)
+            if (this._currentMarker != null)
             {
-                map_viw.Markers.Remove(MapControl._currentMarker);
+                map_viw.Markers.Remove(this._currentMarker);
                 SystemConsole.setConsoleTxtThreadSafe("Current Marker De Initialized");
             }
         }
@@ -240,13 +251,13 @@ namespace pb_TunnelVisualizar.userControls
 
         private void map_viw_MouseMove(object sender, MouseEventArgs e)
         {
-            if (MapControl.mapControl.current_marker_cheack_bx.IsChecked == true &&
+            if (this.current_marker_cheack_bx.IsChecked == true &&
                 e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
             {
-                MapControl.mapControl.map_viw.Markers.Remove(MapControl._currentMarker);
+                this.map_viw.Markers.Remove(this._currentMarker);
                 System.Windows.Point p = e.GetPosition(map_viw);
-                MapControl._currentMarker.Position = map_viw.FromLocalToLatLng((int) p.X, (int) p.Y);
-                map_viw.Markers.Add(MapControl._currentMarker);
+                this._currentMarker.Position = map_viw.FromLocalToLatLng((int)p.X, (int)p.Y);
+                map_viw.Markers.Add(this._currentMarker);
                 SystemConsole.setConsoleTxtThreadSafe("Current Position Of Marker Is : " + p.X.ToString() + ", " +
                                                       p.Y.ToString());
             }
@@ -254,12 +265,12 @@ namespace pb_TunnelVisualizar.userControls
 
         private void map_viw_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (MapControl.mapControl.current_marker_cheack_bx.IsChecked == true)
+            if (this.current_marker_cheack_bx.IsChecked == true)
             {
-                MapControl.mapControl.map_viw.Markers.Remove(MapControl._currentMarker);
+                this.map_viw.Markers.Remove(this._currentMarker);
                 System.Windows.Point p = e.GetPosition(map_viw);
-                MapControl._currentMarker.Position = map_viw.FromLocalToLatLng((int) p.X, (int) p.Y);
-                map_viw.Markers.Add(MapControl._currentMarker);
+                this._currentMarker.Position = map_viw.FromLocalToLatLng((int)p.X, (int)p.Y);
+                map_viw.Markers.Add(this._currentMarker);
                 SystemConsole.setConsoleTxtThreadSafe("Current Position Of Marker Is : " + p.X.ToString() + ", " +
                                                       p.Y.ToString());
             }
@@ -301,17 +312,17 @@ namespace pb_TunnelVisualizar.userControls
 
         private void map_type_combo_bx_DropDownClosed(object sender, EventArgs e)
         {
-            map_viw.MapProvider = (GMapProvider) map_type_combo_bx.SelectedItem;
+            map_viw.MapProvider = (GMapProvider)map_type_combo_bx.SelectedItem;
             map_viw.ReloadMap();
         }
 
         private void map_mode_combo_bx_DropDownClosed(object sender, EventArgs e)
         {
-            map_viw.Manager.Mode = (AccessMode) map_mode_combo_bx.SelectedItem;
+            map_viw.Manager.Mode = (AccessMode)map_mode_combo_bx.SelectedItem;
             map_viw.ReloadMap();
         }
 
-        public static bool PingNetwork(string hostNameOrAddress)
+        private bool PingNetwork(string hostNameOrAddress)
         {
             using (Ping p = new Ping())
             {

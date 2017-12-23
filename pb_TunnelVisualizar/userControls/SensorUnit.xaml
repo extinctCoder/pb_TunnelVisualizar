@@ -17,8 +17,9 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="5"></RowDefinition>
         </Grid.RowDefinitions>
-        <materialDesign:Card Grid.Column="1" Grid.Row="1">
-            <Grid>
+        
+        <materialDesign:Card Grid.Column="1" Grid.Row="1" x:Name="Card">
+            <Grid x:Name="container">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="15"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
@@ -30,6 +31,8 @@
                     <RowDefinition Height="5"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="5"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="25"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
@@ -101,7 +104,29 @@
                     <Label Grid.Column="5" Grid.Row="1" Content="Water Height : " HorizontalContentAlignment="Right" VerticalContentAlignment="Center"></Label>
                     <Label Grid.Column="7" Grid.Row="1" x:Name="water_height_label" Content="-0.00"></Label>
                 </Grid>
-                <Button Grid.Column="1" Grid.Row="7" Click="ButtonBase_OnClick" Content="reload"></Button>
+                <Grid Grid.Column="1" Grid.Row="7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="5"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="1" Grid.Row="1" Content="Flow Rate : " HorizontalContentAlignment="Right" VerticalContentAlignment="Center"></Label>
+                    <TextBox Grid.Column="3" Grid.Row="1" x:Name="flow_rate_label_meter" Text="-2"></TextBox>
+                    <Label Grid.Column="5" Grid.Row="1" Content="Water Height : " HorizontalContentAlignment="Right" VerticalContentAlignment="Center"></Label>
+                    <TextBox Grid.Column="7" Grid.Row="1" x:Name="water_height_label_meter" Text="-2"></TextBox>
+                </Grid>
+                <Button Grid.Column="1" Grid.Row="9" Click="ButtonBase_OnClick" Content="reload"></Button>
             </Grid>
         </materialDesign:Card>
     </Grid>
